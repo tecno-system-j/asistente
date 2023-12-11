@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Interfaz de Siri con Imagen</title>
+    <!-- CSS y JS necesarios para la interfaz -->
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        height: 100vh;
+        background-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.9),
+          rgba(0, 0, 0, 0.3)
+        );
+      }
+
+      .siri-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 40px;
+      }
+
+      .siri-responses {
+        width: 70%;
+        max-width: 800px;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        text-align: center;
+        color: #fff;
+      }
+
+      .response {
+        margin-bottom: 10px;
+      }
+
+      .siri-container {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        overflow: hidden;
+      }
+
+      .siri-circle {
+        width: 100%;
+        height: 100%;
+        background-image: url("https://i.pinimg.com/originals/8e/a0/bc/8ea0bcfd33f66a3a9d49bc4dd13338b5.gif");
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.1s ease-in-out;
+      }
+
+      .speaking {
+        animation: speakingAnimation 2s infinite;
+      }
+
+      @keyframes speakingAnimation {
+        0% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.1);
+        }
+
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="siri-wrapper">
+        <div class="siri-wrapper">
+            <div class="siri-responses">
+              <div class="response">Hola, ¿en qué puedo ayudarte?</div>
+            </div>
+            <div class="siri-container" id="siriContainer">
+              <div class="siri-circle" id="siriCircle"></div>
+            </div>
+          </div>
+    </div>
+
+    <script>
+      const siriCircle = document.getElementById("siriCircle");
+      siriCircle.addEventListener("click", () => {
+        // Llamada a la ruta /activar-asistente del servidor Flask al dar clic en siriCircle
+        fetch("/activar-asistente")
+          .then((response) => response.text())
+          .then((data) => {
+            // Manejar la respuesta del asistente si es necesario
+            console.log(data);
+          })
+          .catch((error) => console.error(error));
+      });
+      siriCircle.addEventListener('click', () => {
+              siriCircle.classList.add('speaking');
+              setTimeout(() => {
+                siriCircle.classList.remove('speaking');
+              }, 2000); // Cambia el tiempo de animación como desees
+            });
+    </script>
+  </body>
+</html>

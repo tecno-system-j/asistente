@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Interfaz Futurista - Gestión de Secciones</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* Estilos generales */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f3f3;
+      overflow-x: hidden;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Estilos del menú lateral */
+    .menu {
+      background-color: #333;
+      color: #fff;
+      width: 280px;
+      transition: width 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .menu .logo {
+      padding: 20px 0;
+      text-align: center;
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .menu-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-list li {
+      border-bottom: 1px solid #444;
+    }
+
+    .menu-list li a {
+      display: block;
+      padding: 15px 20px;
+      color: #fff;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .menu-list li a:hover {
+      background-color: #555;
+    }
+
+    .menu-list li a i {
+      margin-right: 10px;
+    }
+
+    /* Estilos para el overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s, visibility 0.5s;
+      z-index: 999;
+    }
+
+    .password-modal {
+      background-color: #fff;
+      padding: 30px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Animación de fade-in para el overlay */
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Estilos del área de contenido */
+    .content {
+      flex: 1;
+      padding: 30px;
+      transition: padding 0.3s ease;
+      overflow-y: auto;
+    }
+
+    /* Estilos específicos de las secciones */
+    section {
+      margin-bottom: 40px;
+      border-radius: 8px;
+      padding: 30px;
+      background-color: #fff;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    section h2 {
+      margin-top: 0;
+    }
+
+    /* Efecto hover en las secciones */
+    section:hover {
+      transform: scale(1.02);
+    }
+
+    /* Estilos para el contenido después de autenticación */
+    .container.authenticated .menu {
+      width: 280px;
+    }
+
+    .container.authenticated .content {
+      padding-left: 280px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="overlay">
+      <div class="password-modal">
+        <h2>Introduce la contraseña para acceder:</h2>
+        <input type="password" id="passwordInput" placeholder="Contraseña">
+        <button onclick="validatePassword()">Acceder</button>
+      </div>
+    </div>
+    <aside class="menu">
+      <div class="logo">Logo de la Aplicación</div>
+      <ul class="menu-list">
+        <li><a href="#seccion1"><i class="fas fa-chart-bar"></i> Sección 1</a></li>
+        <li><a href="#seccion2"><i class="fas fa-cogs"></i> Sección 2</a></li>
+        <li><a href="#seccion3"><i class="fas fa-file-alt"></i> Sección 3</a></li>
+        <!-- Agrega más elementos según sea necesario -->
+      </ul>
+    </aside>
+    <main class="content">
+      <section id="seccion1">
+        <h2>Sección 1</h2>
+        <!-- Contenido de la sección 1 -->
+      </section>
+      <section id="seccion2">
+        <h2>Sección 2</h2>
+        <!-- Contenido de la sección 2 -->
+      </section>
+      <section id="seccion3">
+        <h2>Sección 3</h2>
+        <!-- Contenido de la sección 3 -->
+      </section>
+      <!-- Agrega más secciones según sea necesario -->
+    </main>
+  </div>
+  <script>
+    function validatePassword() {
+      const password = document.getElementById('passwordInput').value;
+
+      // Verificar la contraseña
+      if (password === '201001201') {
+        // Mostrar el contenido una vez se introduce la contraseña correcta
+        document.querySelector('.overlay').classList.remove('active');
+        document.querySelector('.container').classList.add('authenticated');
+      } else {
+        alert('Contraseña incorrecta. Inténtalo de nuevo.');
+      }
+    }
+  </script>
+</body>
+</html>

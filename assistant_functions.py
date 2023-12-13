@@ -7,27 +7,27 @@ from ibm_watson import SpeechToTextV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import pyttsx3
 import sys
-import openai
+import openai  # Importa la biblioteca de OpenAI
+
+# Configura tu clave de API de OpenAI
+api_key = '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'
+openai.api_key = api_key
+
 
 # Configurar las credenciales de IBM Watson Speech to Text
-ibm_api_key = 'LMD-JEU7zpqsgPJKZvyMeLgdaXeVUMlR3uwNDyiFsOYi'
-ibm_url = 'https://api.us-east.speech-to-text.watson.cloud.ibm.com/instances/8dbf9dec-5d36-4519-9de4-a9e3585b3896'
+api_key = 'LMD-JEU7zpqsgPJKZvyMeLgdaXeVUMlR3uwNDyiFsOYi'
+url = 'https://api.us-east.speech-to-text.watson.cloud.ibm.com/instances/8dbf9dec-5d36-4519-9de4-a9e3585b3896'
 
-ibm_authenticator = IAMAuthenticator(ibm_api_key)
-speech_to_text = SpeechToTextV1(authenticator=ibm_authenticator)
-speech_to_text.set_service_url(ibm_url)
+authenticator = IAMAuthenticator(api_key)
+speech_to_text = SpeechToTextV1(authenticator=authenticator)
+speech_to_text.set_service_url(url)
 
 recognizer = sr.Recognizer()
 microphone = sr.Microphone()
 
-# Configurar la clave de API de OpenAI
-openai_api_key = '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'
-openai.api_key = openai_api_key
-
-engine = pyttsx3.init()
-
 
 def recognize_speech_spanish():
+    #microphone = sr.Microphone()  # Mueve la instancia de Microphone adentro de la función
     with microphone as source:
         print("Di algo:")
         recognizer.adjust_for_ambient_noise(source)
@@ -35,6 +35,7 @@ def recognize_speech_spanish():
 
     try:
         print("Reconociendo...")
+        # Elimina el registro adicional aquí
         result = recognizer.recognize_google(audio, language='es-ES')
         recognized_text = result
         print("Reconocido:", recognized_text)
@@ -46,9 +47,8 @@ def recognize_speech_spanish():
         print("Error al acceder al servicio de reconocimiento de voz")
         return "Error al acceder al servicio de reconocimiento de voz"
 
-
 def obtener_clima(ciudad):
-    api_key = 'bf2dc197624f54794c9c45a621b1e09b'
+    api_key = 'bf2dc197624f54794c9c45a621b1e09b'  # Reemplaza con tu clave de API de OpenWeatherMap
     base_url = 'http://api.openweathermap.org/data/2.5/weather?'
 
     try:
@@ -68,6 +68,7 @@ def obtener_clima(ciudad):
         return "Hubo un error al obtener el clima. Por favor, intenta nuevamente."
 
 
+   #Generacion de respuestas con IA     
 def generate_openai_response(prompt):
     # Configura tu API key de OpenAI
     api_key = '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'
@@ -83,6 +84,7 @@ def generate_openai_response(prompt):
     return response.choices[0].text.strip()
 
 
+engine = pyttsx3.init()
 def iniciar_asistente():
     engine.say("Asistente activado. Di algo para comenzar.")
     engine.runAndWait()
@@ -111,18 +113,33 @@ def iniciar_asistente():
             alarm_time = now + datetime.timedelta(minutes=5)
             print(f"Alarma establecida para las {alarm_time.strftime('%H:%M')}")
 
+        # Nuevas funcionalidades
+
+        elif 'abrir' in user_input.lower():
+            nombre_aplicacion = user_input.lower().split('abrir')[-1].strip()
+            abrir_aplicacion(nombre_aplicacion)
         elif 'clima' in user_input.lower():
-            city = "Cali"
-            weather_info = obtener_clima(city)
-            print(weather_info)
-            engine.say(weather_info)
-            engine.runAndWait()
+            city = "Cali"  # Puedes cambiar a la ciudad que desees
+            api_key = "bf2dc197624f54794c9c45a621b1e09b"  # Reemplaza con tu API Key de OpenWeatherMap
+            weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&lang=es&units=metric"
+            
+            response = requests.get(weather_url)
+            weather_data = response.json()
+            
+            if response.status_code == 200:
+                description = weather_data['weather'][0]['description']
+                temp = weather_data['main']['temp']
+                print(f"El clima en {city} es {description}. Temperatura: {temp}°C")
+                engine.say(f"El clima en {city} es {description}. Temperatura: {temp} grados Celsius.")
+                engine.runAndWait()
+            else:
+                print("No se pudo obtener la información del clima")
 
         elif 'apagar' in user_input.lower():
             print("Saliendo del programa.")
             engine.say("Saliendo del programa.")
             engine.runAndWait()
-            sys.exit()
+            sys.exit()  # Cierra el programa cuando se diga "salir"
 
         else:
             print("No se reconoció la solicitud. Obteniendo respuesta de IA...")
@@ -130,7 +147,6 @@ def iniciar_asistente():
             print("Respuesta de IA:", response)
             engine.say(response)
             engine.runAndWait()
-
 
 if __name__ == "__main__":
     iniciar_asistente()

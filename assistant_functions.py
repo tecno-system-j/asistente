@@ -71,7 +71,7 @@ def obtener_clima(ciudad):
    #Generacion de respuestas con IA     
 def generate_openai_response(prompt):
     # Configura tu API key de OpenAI
-    api_key = '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'
+    api_key = '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'
 
     openai.api_key = api_key
 
